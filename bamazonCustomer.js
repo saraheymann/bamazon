@@ -10,7 +10,7 @@ var connection = mysql.createConnection({
 });
 
 connection.connect(function(err){
-    selectData();
+    selectData(); 
 });
 
 function selectData() {
@@ -20,7 +20,38 @@ function selectData() {
             throw err;
         }
         data.forEach(function (row) {
-            console.log(`ID is: ${row.item_id}. Name is: ${row.product_name} Price: ${row.price}`);
-        });
-    });    
-}
+            console.log(`ID is: ${row.item_id}, The product is: ${row.product_name}, Price: $${row.price}`);
+        })
+        inquirer.prompt([
+          {
+            'name': 'ID',
+            'message': 'What is the ID of the product you would like to purchase?'
+        },
+        {
+            'name': 'units',
+            'message': 'How many units would you like to buy?'
+        }
+    ]).then(function(answer){
+          var chosenItem;
+          for(var i = 0; i< data.length; i++){
+              if(data[i].item.id === answer.ID){
+                  chosenItem = data[i];
+              }
+          }
+            if(chosenItem.stock_quantity > answer.units){
+                // var newStock = chosenItem.stock_quantity - answer.units;
+                connection.query(
+                function(error){
+                    if (error) throw err;
+                    console.log("purchased successfully");
+                }
+                )
+            }
+        
+    })
+        
+    })
+        
+}; 
+
+
