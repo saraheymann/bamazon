@@ -65,6 +65,7 @@ function selectData() {
                 })
             }else{
                 console.log("your item is out of stock");
+                selectData();
             }
         })
         
