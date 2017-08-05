@@ -51,6 +51,18 @@ function selectData() {
             if (err) throw err;
             if(data[0].stock_quantity - answer.units >= 0){
                 console.log("item is in stock");
+                console.log("Total cost is: $" + (answer.units * data[0].price));
+                connection.query('UPDATE products SET ? WHERE ?', 
+                [
+                    {
+                        stock_quantity: data[0].stock_quantity - answer.units
+                    },{
+                        item_id: answer.ID
+                    }
+                    ], function(err, res){
+                    if (err) throw err;
+                    selectData();
+                })
             }else{
                 console.log("your item is out of stock");
             }
